@@ -20,7 +20,7 @@ import { Moon, Sun } from "lucide-react";
 import { Switch } from "../ui/switch";
 import CreateNewChat from "../chat/CreateNewChat";
 import NewGroupChatModel from "../chat/NewGroupChatModel";
-import GroupChatList from "../chat/GroupChatList";
+import GroupChatList from "../chat/GroupMessageList";
 import AddFriendModel from "../chat/AddFriendModel";
 import DirectMessageList from "../chat/DirectMessageList";
 import { useThemeStore } from "@/stores/useThemeStore";

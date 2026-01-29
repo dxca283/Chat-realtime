@@ -39,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
           const { accessToken } = await authService.signIn(username, password);
           get().setAccessToken(accessToken);
           await get().fetchMe();
+          useChatStore.getState().fetchConversations();
           toast.success("Sign in successful!");
         } catch (error) {
           console.error("Sign in error:", error);
