@@ -35,7 +35,7 @@ export interface Conversation {
   lastMessageAt?: string | null;
   seenBy?: SeenUser[]; 
   lastMessage?: LastMessage | null;
-  unreadCounts?: Record<string, number>; // map userId -> unread count
+  unreadCounts: Record<string, number>; // map userId -> unread count
   createdAt: string;
   updatedAt: string;
 }
