@@ -72,5 +72,6 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
+    
   )
 }

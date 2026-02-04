@@ -2,10 +2,12 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
 import ChatCard from "./ChatCard";
+import UnreadBadge from "./UnreadBadge";
+import GroupChatAvatar from "./GroupChatAvatar";
 
 const GroupMessageCard = ({ conversation }: { conversation: Conversation }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages } =
+  const { activeConversationId, setActiveConversation, messages, fetchMessages } =
     useChatStore();
   if (!user) return null;
   const unreadCounts = conversation.unreadCounts[user._id];
@@ -14,6 +16,7 @@ const GroupMessageCard = ({ conversation }: { conversation: Conversation }) => {
     setActiveConversation(id);
     if (!messages[id]) {
       //fetch messages
+      await fetchMessages(id);
     }
   };
   return (
@@ -28,7 +31,10 @@ const GroupMessageCard = ({ conversation }: { conversation: Conversation }) => {
       isActive={activeConversationId === conversation._id}
       onSelect={handleSelectConversation}
       unreadCount={unreadCounts}
-      leftSection={<></>}
+      leftSection={<>
+        {unreadCounts > 0 && <UnreadBadge unreadCount={unreadCounts} />}
+        <GroupChatAvatar participants={conversation.participants} type="chat"/>
+      </>}
       subtitle={
         <p className="text-sm truncate text-muted-foreground">
           {conversation.participants.length} members

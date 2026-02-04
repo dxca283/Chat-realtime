@@ -14,7 +14,7 @@ const DirectMessageCard = ({
   conversation: Conversation;
 }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages } =
+  const { activeConversationId, setActiveConversation, messages, fetchMessages } =
     useChatStore();
   if (!user) return null;
   const otherUser = conversation.participants.find((p) => p._id !== user._id);
@@ -27,6 +27,7 @@ const DirectMessageCard = ({
     setActiveConversation(id);
     if (!messages[id]) {
       //todo: fetch message
+      await fetchMessages(id);
     }
   };
 
