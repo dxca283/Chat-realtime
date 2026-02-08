@@ -44,9 +44,12 @@ export interface ConversationResponse {
   conversations: Conversation[]
 }
 export interface Message {
-  id: string,
-  conversationId: string,
-  senderId: string,
-  content: string | null,
-  imgUrl: string
+  _id: string;
+  conversationId: string;
+  senderId: string;
+  content: string | null;
+  imgUrl?: string | null;
+  updatedAt?: string | null;
+  createdAt: string;
+  isOwn?: boolean;
 }

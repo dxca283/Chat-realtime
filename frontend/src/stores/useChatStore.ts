@@ -50,7 +50,7 @@ export const useChatStore = create<ChatState>()(
         try {
           const { messages: fetched, cursor } = await chatService.fetchMessages(
             convoId,
-            nextCursor
+            nextCursor,
           );
 
           const processed = fetched.map((m) => ({
@@ -60,7 +60,8 @@ export const useChatStore = create<ChatState>()(
 
           set((state) => {
             const prev = state.messages[convoId]?.items ?? [];
-            const merged = prev.length > 0 ? [...processed, ...prev] : processed;
+            const merged =
+              prev.length > 0 ? [...processed, ...prev] : processed;
 
             return {
               messages: {
@@ -77,6 +78,44 @@ export const useChatStore = create<ChatState>()(
           console.error("Lỗi xảy ra khi fetchMessages:", error);
         } finally {
           set({ messageLoading: false });
+        }
+      },
+      sendDirectMessage: async (recipientId, content, imgUrl) => {
+        try {
+          const { activeConversationId } = get();
+          const message = await chatService.sendDirectMessage(
+            recipientId,
+            content,
+            imgUrl,
+            activeConversationId || undefined,
+          );
+          set((state) => ({
+            conversations: state.conversations.map((c) =>
+              c._id === activeConversationId ? { ...c, seenBy: [] } : c,
+            ),
+          }));
+          return message;
+        } catch (error) {
+          console.error("Lỗi xảy ra khi sendDirectMessage:", error);
+          throw error;
+        }
+      },
+      sendGroupMessage: async (conversationId, content, imgUrl) => {
+        try {
+          const message = await chatService.sendGroupMessage(
+            conversationId,
+            content,
+            imgUrl,
+          );
+          set((state) => ({
+            conversations: state.conversations.map((c) =>
+              c._id === get().activeConversationId ? { ...c, seenBy: [] } : c,
+            ),
+          }));
+          return message;
+        } catch (error) {
+          console.error("Lỗi xảy ra khi sendGroupMessage:", error);
+          throw error;
         }
       },
     }),
