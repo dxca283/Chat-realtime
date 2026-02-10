@@ -53,11 +53,15 @@ export interface ChatState {
     content: string,
     imgUrl?: string,
   ) => Promise<void>;
-
+  //add messages
+  addMessage: (message: Message) => Promise<void>;
+  //update conversation
+  updateConversation: (conversation: Conversation) => void;
 }
 
 export interface SocketState {
-    socket: Socket | null;
-    connect: () => void;
-    disconnect: () => void;
+  socket: Socket | null;
+  onlineUsers: string[];
+  connect: () => void;
+  disconnect: () => void;
 }

@@ -32,8 +32,8 @@ export const useAuthStore = create<AuthState>()(
       },
 
       signIn: async (username, password) => {
+        set({ loading: true });
         try {
-          set({ loading: true });
           localStorage.clear();
           useChatStore.getState().reset();
           const { accessToken } = await authService.signIn(username, password);
@@ -44,6 +44,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           console.error("Sign in error:", error);
           toast.error("Sign in failed.");
+          throw error; // Re-throw so the form knows login failed
         } finally {
           set({ loading: false });
         }

@@ -118,6 +118,44 @@ export const useChatStore = create<ChatState>()(
           throw error;
         }
       },
+      addMessage: async (message) => {
+        try {
+          const { user } = useAuthStore.getState();
+          const { fetchMessages } = get();
+          message.isOwn = message.senderId === user?._id;
+          const convoId = message.conversationId;
+          let prevItem = get().messages[convoId]?.items ?? [];
+          if (prevItem.length === 0) {
+            await fetchMessages(message.conversationId);
+            prevItem = get().messages[convoId]?.items ?? [];
+          }
+          set((state) => {
+            if (prevItem.some((m) => m._id === message._id)) {
+              return state;
+            }
+            return {
+              messages: {
+                ...state.messages,
+                [convoId]: {
+                  items: [...prevItem, message],
+                  hasMore: state.messages[convoId]?.hasMore ?? false,
+                  nextCursor: state.messages[convoId]?.nextCursor ?? null,
+                },
+              },
+            };
+          });
+        } catch (error) {
+          console.error("Lỗi xảy ra khi addMessage:", error);
+          throw error;
+        }
+      },
+      updateConversation: (conversation) => {
+         set((state) => ({
+          conversations: state.conversations.map((c) =>
+            c._id === conversation._id ? {...c, ...conversation} : c,
+          ),
+        }));
+      },
     }),
     {
       name: "chat-storage",
