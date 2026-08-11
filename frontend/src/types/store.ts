@@ -31,32 +31,40 @@ export interface ChatState {
     string,
     {
       items: Message[];
-      hasMore: boolean; //infinite scroll
-      nextCursor: string | null; // pagination
+      hasMore: boolean; // infinite-scroll
+      nextCursor?: string | null; // phân trang
     }
   >;
   activeConversationId: string | null;
   convoLoading: boolean;
   messageLoading: boolean;
+  loading: boolean;
   reset: () => void;
+
   setActiveConversation: (id: string | null) => void;
   fetchConversations: () => Promise<void>;
-  fetchMessages: (conversationId: string) => Promise<void>;
+  fetchMessages: (conversationId?: string) => Promise<void>;
   sendDirectMessage: (
     recipientId: string,
     content: string,
     imgUrl?: string,
-    conversationId?: string,
   ) => Promise<void>;
   sendGroupMessage: (
     conversationId: string,
     content: string,
     imgUrl?: string,
   ) => Promise<void>;
-  //add messages
+  // add message
   addMessage: (message: Message) => Promise<void>;
-  //update conversation
-  updateConversation: (conversation: Conversation) => void;
+  // update convo
+  updateConversation: (conversation: Partial<Conversation> & { _id: string }) => void;
+  // markAsSeen: () => Promise<void>;
+  // addConvo: (convo: Conversation) => void;
+  // createConversation: (
+  //   type: "group" | "direct",
+  //   name: string,
+  //   memberIds: string[]
+  // ) => Promise<void>;
 }
 
 export interface SocketState {

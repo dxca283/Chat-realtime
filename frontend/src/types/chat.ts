@@ -1,19 +1,19 @@
 export interface Participant {
   _id: string;
   displayName: string;
-  avatarUrl: string | null;
+  avatarUrl?: string | null;
   joinedAt: string;
 }
 
 export interface SeenUser {
-    _id: string;
-    displayName: string;
-    avatarUrl : string;
+  _id: string;
+  displayName?: string;
+  avatarUrl?: string | null;
 }
 
 export interface Group {
-  name?: string | null;
-  createdBy: string; // user id
+  name: string;
+  createdBy: string;
 }
 
 export interface LastMessage {
@@ -30,19 +30,20 @@ export interface LastMessage {
 export interface Conversation {
   _id: string;
   type: "direct" | "group";
+  group: Group;
   participants: Participant[];
-  group?: Group | null;
-  lastMessageAt?: string | null;
-  seenBy?: SeenUser[]; 
-  lastMessage?: LastMessage | null;
-  unreadCounts: Record<string, number>; // map userId -> unread count
+  lastMessageAt: string;
+  seenBy: SeenUser[];
+  lastMessage: LastMessage | null;
+  unreadCounts: Record<string, number>; // key = userId, value = unread count
   createdAt: string;
   updatedAt: string;
 }
 
 export interface ConversationResponse {
-  conversations: Conversation[]
+  conversations: Conversation[];
 }
+
 export interface Message {
   _id: string;
   conversationId: string;

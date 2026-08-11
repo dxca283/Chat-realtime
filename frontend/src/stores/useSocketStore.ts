@@ -22,31 +22,21 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       console.log("Socket connected");
     });
     //online users
-    socket.on("onlineUsers", (userId) => {
+    socket.on("online-users", (userId) => {
       set({ onlineUsers: userId });
     });
     //new message
-    socket.on("newMessage", ({ message, conversation, unreadCounts }) => {
+    socket.on("new-message", ({ message, conversation, unreadCounts }) => {
       useChatStore.getState().addMessage(message);
-
-      // Check if sender is populated or just an ID
-      const sender = conversation.lastMessage.sender;
       const lastMessage = {
         _id: conversation.lastMessage._id,
         content: conversation.lastMessage.content,
         createdAt: conversation.lastMessage.createdAt,
-        sender:
-          typeof sender === "object" && sender !== null
-            ? {
-                _id: sender._id,
-                displayName: sender.displayName,
-                avatarUrl: sender.avatarUrl,
-              }
-            : {
-                _id: conversation.lastMessage.senderId || sender,
-                displayName: "Unknown",
-                avatarUrl: null,
-              },
+        sender: {
+          _id: conversation.lastMessage._id,
+          displayName: "",
+          avatarUrl: null,
+        },
       };
       const updatedConversation = {
         ...conversation,

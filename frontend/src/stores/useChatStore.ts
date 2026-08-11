@@ -10,8 +10,10 @@ export const useChatStore = create<ChatState>()(
       conversations: [],
       messages: {},
       activeConversationId: null,
-      convoLoading: false,
+      convoLoading: false, // convo loading
       messageLoading: false,
+      loading: false,
+
       setActiveConversation: (id) => set({ activeConversationId: id }),
       reset: () => {
         set({
@@ -19,15 +21,17 @@ export const useChatStore = create<ChatState>()(
           messages: {},
           activeConversationId: null,
           convoLoading: false,
+          messageLoading: false,
         });
       },
       fetchConversations: async () => {
         try {
           set({ convoLoading: true });
           const { conversations } = await chatService.fetchConversation();
+
           set({ conversations, convoLoading: false });
         } catch (error) {
-          console.error("Loi xay ra khi fetch conversations", error);
+          console.error("Lỗi xảy ra khi fetchConversations:", error);
           set({ convoLoading: false });
         }
       },
@@ -83,7 +87,7 @@ export const useChatStore = create<ChatState>()(
       sendDirectMessage: async (recipientId, content, imgUrl) => {
         try {
           const { activeConversationId } = get();
-          const message = await chatService.sendDirectMessage(
+          await chatService.sendDirectMessage(
             recipientId,
             content,
             imgUrl,
@@ -94,65 +98,62 @@ export const useChatStore = create<ChatState>()(
               c._id === activeConversationId ? { ...c, seenBy: [] } : c,
             ),
           }));
-          return message;
         } catch (error) {
-          console.error("Lỗi xảy ra khi sendDirectMessage:", error);
-          throw error;
+          console.error("Lỗi xảy ra khi gửi direct message", error);
         }
       },
       sendGroupMessage: async (conversationId, content, imgUrl) => {
         try {
-          const message = await chatService.sendGroupMessage(
-            conversationId,
-            content,
-            imgUrl,
-          );
+          await chatService.sendGroupMessage(conversationId, content, imgUrl);
           set((state) => ({
             conversations: state.conversations.map((c) =>
               c._id === get().activeConversationId ? { ...c, seenBy: [] } : c,
             ),
           }));
-          return message;
         } catch (error) {
-          console.error("Lỗi xảy ra khi sendGroupMessage:", error);
-          throw error;
+          console.error("Lỗi xảy ra gửi group message", error);
         }
       },
       addMessage: async (message) => {
         try {
           const { user } = useAuthStore.getState();
           const { fetchMessages } = get();
+
           message.isOwn = message.senderId === user?._id;
+
           const convoId = message.conversationId;
-          let prevItem = get().messages[convoId]?.items ?? [];
-          if (prevItem.length === 0) {
+
+          let prevItems = get().messages[convoId]?.items ?? [];
+
+          if (prevItems.length === 0) {
             await fetchMessages(message.conversationId);
-            prevItem = get().messages[convoId]?.items ?? [];
+            prevItems = get().messages[convoId]?.items ?? [];
           }
+
           set((state) => {
-            if (prevItem.some((m) => m._id === message._id)) {
+            if (prevItems.some((m) => m._id === message._id)) {
               return state;
             }
+
             return {
               messages: {
                 ...state.messages,
                 [convoId]: {
-                  items: [...prevItem, message],
-                  hasMore: state.messages[convoId]?.hasMore ?? false,
-                  nextCursor: state.messages[convoId]?.nextCursor ?? null,
+                  items: [...prevItems, message],
+                  hasMore: state.messages[convoId].hasMore,
+                  nextCursor: state.messages[convoId].nextCursor ?? undefined,
                 },
               },
             };
           });
         } catch (error) {
-          console.error("Lỗi xảy ra khi addMessage:", error);
-          throw error;
+          console.error("Lỗi xảy khi ra add message:", error);
         }
       },
       updateConversation: (conversation) => {
-         set((state) => ({
+        set((state) => ({
           conversations: state.conversations.map((c) =>
-            c._id === conversation._id ? {...c, ...conversation} : c,
+            c._id === conversation._id ? { ...c, ...conversation } : c,
           ),
         }));
       },

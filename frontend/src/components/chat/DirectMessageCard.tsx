@@ -1,5 +1,4 @@
 import type { Conversation } from "@/types/chat";
-import React from "react";
 import ChatCard from "./ChatCard";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
@@ -9,40 +8,38 @@ import StatusBadge from "./StatusBadge";
 import UnreadBadge from "./UnreadBadge";
 import { useSocketStore } from "@/stores/useSocketStore";
 
-const DirectMessageCard = ({
-  conversation,
-}: {
-  conversation: Conversation;
-}) => {
+
+const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
   const { activeConversationId, setActiveConversation, messages, fetchMessages } =
     useChatStore();
   const { onlineUsers } = useSocketStore();
+
   if (!user) return null;
-  const otherUser = conversation.participants.find((p) => p._id !== user._id);
+
+  const otherUser = convo.participants.find((p) => p._id !== user._id);
   if (!otherUser) return null;
 
-  const unreadCount = conversation.unreadCounts[user._id];
-  const lastMessage = conversation.lastMessage?.content ?? "";
+  const unreadCount = convo.unreadCounts[user._id];
+  const lastMessage = convo.lastMessage?.content ?? "";
 
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);
     if (!messages[id]) {
-      //todo: fetch message
-      await fetchMessages(id);
+      await fetchMessages();
     }
   };
 
   return (
     <ChatCard
-      conversationId={conversation._id}
+      convoId={convo._id}
       name={otherUser.displayName ?? ""}
       timestamp={
-        conversation.lastMessage?.createdAt
-          ? new Date(conversation.lastMessage.createdAt)
+        convo.lastMessage?.createdAt
+          ? new Date(convo.lastMessage.createdAt)
           : undefined
       }
-      isActive={activeConversationId === conversation._id}
+      isActive={activeConversationId === convo._id}
       onSelect={handleSelectConversation}
       unreadCount={unreadCount}
       leftSection={
@@ -52,20 +49,19 @@ const DirectMessageCard = ({
             name={otherUser.displayName ?? ""}
             avatarUrl={otherUser.avatarUrl ?? undefined}
           />
-          {/*Socket io */}
-          <StatusBadge status={onlineUsers.includes(otherUser?._id ?? "") ? "online" : "offline"} />
-          {
-            unreadCount > 0 && <UnreadBadge unreadCount={unreadCount} />
-          }
+          <StatusBadge
+            status={
+              onlineUsers.includes(otherUser?._id ?? "") ? "online" : "offline"
+            }
+          />
+          {unreadCount > 0 && <UnreadBadge unreadCount={unreadCount} />}
         </>
       }
       subtitle={
         <p
           className={cn(
             "text-sm truncate",
-            unreadCount > 0
-              ? "font-medium text-foreground"
-              : "text-muted-foreground",
+            unreadCount > 0 ? "font-medium text-foreground" : "text-muted-foreground"
           )}
         >
           {lastMessage}

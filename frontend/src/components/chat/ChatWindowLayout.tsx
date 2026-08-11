@@ -7,28 +7,32 @@ import ChatWindowBody from "./ChatWindowBody";
 import MessageInput from "./MessageInput";
 
 const ChatWindowLayout = () => {
-  const { activeConversationId, conversations, messageLoading: loading, messages } = useChatStore();
-  const selectedConversation = conversations.find((c) => c._id === activeConversationId) ?? null;
+  const {
+    activeConversationId,
+    conversations,
+    messageLoading: loading,
+  } = useChatStore();
+  const selectedConversation =
+    conversations.find((c) => c._id === activeConversationId) ?? null;
   if (!selectedConversation) {
-    return <ChatWelcomeScreen />
+    return <ChatWelcomeScreen />;
   }
   if (loading) {
-    return <ChatWindowSkeleton />
+    return <ChatWindowSkeleton />;
   }
-
 
   return (
     <SidebarInset className="flex flex-col h-full overflow-hidden rounded-sm shadow-md">
       {/*Header */}
-      <ChatWindowHeader chat={selectedConversation}/>
+      <ChatWindowHeader chat={selectedConversation} />
       {/*Body */}
       <div className="flex-1 overflow-y-auto bg-primary-foreground">
         <ChatWindowBody />
       </div>
-      {/* Footer */}
+      {/* Footer */} 
       <MessageInput selectedConversation={selectedConversation} />
     </SidebarInset>
-  )
-}
+  );
+};
 
-export default ChatWindowLayout
+export default ChatWindowLayout;

@@ -1,4 +1,4 @@
-export const updateConversatuinAfterCreateMessage = (
+export const updateConversationAfterCreateMessage = (
   conversation,
   message,
   senderId,
@@ -21,24 +21,14 @@ export const updateConversatuinAfterCreateMessage = (
   });
 };
 
-export const emitNewMessage = async (io, conversation, message) => {
-  // Populate sender information from the message
-  await message.populate("senderId", "_id username displayName avatarUrl");
-
-  io.to(conversation._id.toString()).emit("newMessage", {
+export const emitNewMessage = (io, conversation, message) => {
+  io.to(conversation._id.toString()).emit("new-message", {
     message,
     conversation: {
       _id: conversation._id,
-      lastMessage: {
-        ...conversation.lastMessage,
-        sender: {
-          _id: message.senderId._id,
-          displayName: message.senderId.displayName,
-          avatarUrl: message.senderId.avatarUrl,
-        },
-      },
+      lastMessage: conversation.lastMessage,
       lastMessageAt: conversation.lastMessageAt,
-      unreadCounts: conversation.unreadCounts,
     },
+    unreadCounts: conversation.unreadCounts,
   });
 };

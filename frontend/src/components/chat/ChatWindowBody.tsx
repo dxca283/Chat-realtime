@@ -7,7 +7,7 @@ const ChatWindowBody = () => {
   const messages = allMessages[activeConversationId!]?.items ?? [];
   const selectedConversation = conversations.find((c) => c._id === activeConversationId);
   if (!selectedConversation) {
-    return <ChatWelcomeScreen />
+    return <ChatWelcomeScreen /> 
   }
   if (!messages?.length) {
     return (
@@ -18,7 +18,7 @@ const ChatWindowBody = () => {
     <div className="p-4 bg-primary-foreground h-full flex flex-col overflow-hidden">
       <div className="flex flex-col overflow-y-auto overflow-x-hidden beautiful-scrollbar">
         {messages.map((message, index) => (
-          <MessageItem key={message._id ?? index} message={message} index={index} messages={messages} selectedConversation={selectedConversation} lastMessageStatus="delivered" />
+          <MessageItem key={message._id ?? index} message={message} index={index} messages={messages} selectedConvo={selectedConversation} lastMessageStatus="delivered" />
         ))}
       </div>
     </div>
