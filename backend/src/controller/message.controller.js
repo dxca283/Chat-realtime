@@ -1,6 +1,10 @@
 import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
-import { updateConversatuinAfterCreateMessage } from "../utils/messageHelper.js";
+import {
+  emitNewMessage,
+  updateConversatuinAfterCreateMessage,
+} from "../utils/messageHelper.js";
+import { io } from "../socket/index.js";
 
 export const sendDirectMessage = async (req, res) => {
   try {
@@ -35,6 +39,9 @@ export const sendDirectMessage = async (req, res) => {
     });
     updateConversatuinAfterCreateMessage(conversation, message, senderId);
     await conversation.save();
+
+    await emitNewMessage(io, conversation, message);
+
     return res.status(201).json({
       message,
     });
@@ -60,6 +67,8 @@ export const sendGroupMessage = async (req, res) => {
     });
     updateConversatuinAfterCreateMessage(conversation, message, senderId);
     await conversation.save();
+    await emitNewMessage(io, conversation, message);
+
     return res.status(201).json({ message });
   } catch (error) {
     console.error("Loi khi gui tin nhan nhom", error);

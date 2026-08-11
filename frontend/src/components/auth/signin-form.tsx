@@ -23,24 +23,29 @@ export function SigninForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const {signIn} = useAuthStore();
+  const { signIn } = useAuthStore();
   const navigate = useNavigate();
   const {
-      register,
-      handleSubmit,
-      formState: { errors, isSubmitting },
-    } = useForm<SignInFormValues>({
-      resolver: zodResolver(signInSchema),
-    });
-  
-    const onSubmit = async (data: SignInFormValues) => {
-      const { username, password } = data;
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit = async (data: SignInFormValues) => {
+    const { username, password } = data;
+    try {
       await signIn(username, password);
       navigate("/");
-    };
-  
-  
-  
+    } catch (error) {
+      // Error is already handled in the store with toast
+      console.error("Login failed:", error);
+    }
+  };
+
+
+
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

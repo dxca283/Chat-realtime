@@ -26,14 +26,15 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           console.error("Sign up error:", error);
           toast.error("Sign up failed.");
+          throw error; // Re-throw so the form knows sign up failed
         } finally {
           set({ loading: false });
         }
       },
 
       signIn: async (username, password) => {
+        set({ loading: true });
         try {
-          set({ loading: true });
           localStorage.clear();
           useChatStore.getState().reset();
           const { accessToken } = await authService.signIn(username, password);
@@ -44,6 +45,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           console.error("Sign in error:", error);
           toast.error("Sign in failed.");
+          throw error; // Re-throw so the form knows login failed
         } finally {
           set({ loading: false });
         }
@@ -51,8 +53,8 @@ export const useAuthStore = create<AuthState>()(
 
       signOut: async () => {
         try {
-          get().clearState();
           await authService.signOut();
+          get().clearState();
           toast.success("Sign out successful!");
         } catch (error) {
           console.error("Sign out error:", error);
