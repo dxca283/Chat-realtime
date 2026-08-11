@@ -1,6 +1,6 @@
 import ChatWindowLayout from "@/components/chat/ChatWindowLayout";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const ChatAppPage = () => {
   return (

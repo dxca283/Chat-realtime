@@ -6,10 +6,11 @@ import { useEffect } from "react";
 import { useAuthStore } from "./stores/useAuthStore";
 import { useSocketStore } from "./stores/useSocketStore";
 
+const router = createBrowserRouter(routes);
+
 function App() {
-  const router = createBrowserRouter(routes);
   const { isDark, setTheme } = useThemeStore();
-  const { accessToken } = useAuthStore();
+  const accessToken = useAuthStore((state) => state.accessToken);
   const { connect, disconnect } = useSocketStore();
 
   useEffect(() => {
