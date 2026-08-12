@@ -4,7 +4,7 @@ import { MoreHorizontal } from "lucide-react";
 
 
 interface ChatCardProps {
-  convoId: string;
+  conversationId: string;
   name: string;
   timestamp?: Date;
   isActive: boolean;
@@ -15,7 +15,7 @@ interface ChatCardProps {
 }
 
 const ChatCard = ({
-  convoId,
+  conversationId,
   name,
   timestamp,
   isActive,
@@ -26,13 +26,13 @@ const ChatCard = ({
 }: ChatCardProps) => {
   return (
     <Card
-      key={convoId}
+      key={conversationId}
       className={cn(
         "border-none p-3 cursor-pointer transition-smooth glass hover:bg-muted/30",
         isActive &&
           "ring-2 ring-primary/50 bg-linear-to-tr from-primary-glow/10 to-primary-foreground"
       )}
-      onClick={() => onSelect(convoId)}
+      onClick={() => onSelect(conversationId)}
     >
       <div className="flex items-center gap-3">
         <div className="relative">{leftSection}</div>

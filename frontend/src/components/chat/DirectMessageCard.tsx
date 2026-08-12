@@ -32,7 +32,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
 
   return (
     <ChatCard
-      convoId={convo._id}
+      conversationId={convo._id}
       name={otherUser.displayName ?? ""}
       timestamp={
         convo.lastMessage?.createdAt
