@@ -1,28 +1,61 @@
-import { useChatStore } from "@/stores/useChatStore"
+import { useEffect } from "react";
+import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import MessageItem from "./MessageItem";
 
 const ChatWindowBody = () => {
-  const { activeConversationId, conversations, messages: allMessages } = useChatStore();
+  const {
+    activeConversationId,
+    conversations,
+    messages: allMessages,
+    markAsSeen,
+  } = useChatStore();
+
   const messages = allMessages[activeConversationId!]?.items ?? [];
-  const selectedConversation = conversations.find((c) => c._id === activeConversationId);
+
+  const selectedConversation = conversations.find(
+    (c) => c._id === activeConversationId,
+  );
+
+  useEffect(() => {
+    if (!activeConversationId) return;
+
+    markAsSeen();
+  }, [activeConversationId, markAsSeen]);
+
+  const lastMessageStatus =
+    (selectedConversation?.seenBy?.length ?? 0) > 0
+      ? "seen"
+      : "delivered";
+
   if (!selectedConversation) {
-    return <ChatWelcomeScreen /> 
+    return <ChatWelcomeScreen />;
   }
-  if (!messages?.length) {
+
+  if (!messages.length) {
     return (
-      <div className="flex h-full items-center justify-center text-muted-foreground">Chua co tin nhan nao</div>
-    )
+      <div className="flex h-full items-center justify-center text-muted-foreground">
+        Chua co tin nhan nao
+      </div>
+    );
   }
+
   return (
     <div className="p-4 bg-primary-foreground h-full flex flex-col overflow-hidden">
       <div className="flex flex-col overflow-y-auto overflow-x-hidden beautiful-scrollbar">
         {messages.map((message, index) => (
-          <MessageItem key={message._id ?? index} message={message} index={index} messages={messages} selectedConvo={selectedConversation} lastMessageStatus="delivered" />
+          <MessageItem
+            key={message._id ?? index}
+            message={message}
+            index={index}
+            messages={messages}
+            selectedConvo={selectedConversation}
+            lastMessageStatus={lastMessageStatus}
+          />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatWindowBody
+export default ChatWindowBody;
