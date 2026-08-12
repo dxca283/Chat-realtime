@@ -5,7 +5,7 @@ interface FetchMessageProps {
   messages: Message[];
   cursor: string;
 }
-const LIMIT = 50;
+const LIMIT = 15;
 export const chatService = {
   async fetchConversation(): Promise<ConversationResponse> {
     const res = await api.get("/conversations");
