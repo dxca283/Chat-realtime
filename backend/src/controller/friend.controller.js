@@ -8,7 +8,7 @@ export const sendFriendRequest = async (req, res) => {
 
     const from = req.user._id;
 
-    if (from === to) {
+    if (from.toString() === to.toString()) {
       return res
         .status(400)
         .json({ message: "You cannot send a friend request to yourself" });
@@ -127,8 +127,8 @@ export const getAllFriends = async (req, res) => {
     const friendship = await Friend.find({
       $or: [{ userA: userId }, { userB: userId }],
     })
-      .populate("userA", "_id displayName avatarUrl")
-      .populate("userB", "_id displayName avatarUrl")
+      .populate("userA", "_id displayName avatarUrl username")
+      .populate("userB", "_id displayName avatarUrl username")
       .lean();
     if (!friendship.length) {
       return res.status(200).json({
@@ -137,7 +137,7 @@ export const getAllFriends = async (req, res) => {
     }
 
     const friends = friendship.map((f) =>
-      f.userA._id.toString() === userId.toString() ? f.userB : f.userA
+      f.userA._id.toString() === userId.toString() ? f.userB : f.userA,
     );
     return res.status(200).json({
       friends,

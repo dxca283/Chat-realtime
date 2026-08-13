@@ -9,7 +9,6 @@ import SignUpPage from "./pages/SignUpPage";
 import ChatAppPage from "./pages/ChatAppPage";
 import ProtectedRoutes from "./components/auth/ProtectedRoute";
 
-
 function App() {
   const { isDark, setTheme } = useThemeStore();
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -28,24 +27,15 @@ function App() {
   return (
     <>
       <Toaster richColors />
-       <BrowserRouter>
+      <BrowserRouter>
         <Routes>
           {/* public routes */}
-          <Route
-            path="/signin"
-            element={<SignInPage />}
-          />
-          <Route
-            path="/signup"
-            element={<SignUpPage />}
-          />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
 
           {/* protectect routes */}
           <Route element={<ProtectedRoutes />}>
-            <Route
-              path="/"
-              element={<ChatAppPage />}
-            />
+            <Route path="/" element={<ChatAppPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

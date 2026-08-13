@@ -21,7 +21,7 @@ import { Switch } from "../ui/switch";
 import CreateNewChat from "../chat/CreateNewChat";
 import NewGroupChatModel from "../chat/NewGroupChatModel";
 import GroupChatList from "../chat/GroupMessageList";
-import AddFriendModel from "../chat/AddFriendModel";
+import AddFriendModel from "../chat/AddFriendModal";
 import DirectMessageList from "../chat/DirectMessageList";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useAuthStore } from "@/stores/useAuthStore";

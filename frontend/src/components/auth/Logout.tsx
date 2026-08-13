@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores/useAuthStore"
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
@@ -14,7 +14,7 @@ const Logout = () => {
     } catch (error) {
       console.error("Logout error:", error);
     }
-  }
+  };
 
   return (
     <div>
@@ -23,7 +23,7 @@ const Logout = () => {
         Log out
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default Logout
+export default Logout;

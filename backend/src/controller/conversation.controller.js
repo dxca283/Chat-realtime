@@ -1,6 +1,6 @@
 import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
-import {io} from "../socket/index.js";
+import { io } from "../socket/index.js";
 
 export const createConversation = async (req, res) => {
   try {
@@ -56,7 +56,14 @@ export const createConversation = async (req, res) => {
       { path: "seenBy", select: "displayName avatarUrl" },
       { path: "lastMessage.senderId", select: "displayName avatarUrl" },
     ]);
-    return res.status(201).json({ conversation });
+    const participants = (conversation.participants || []).map((p) => ({
+      _id: p.userId?._id,
+      displayName: p.userId?.displayName,
+      avatarUrl: p.userId?.avatarUrl ?? null,
+      joinedAt: p.joinedAt,
+    }));
+    const formmated = { ...conversation.toObject(), participants };
+    return res.status(201).json({ conversation: formmated });
   } catch (error) {
     console.error("Loi khi tao conversation");
     return res.status(500).json({ message: "Loi he thong" });
@@ -166,7 +173,9 @@ export const markAsSeen = async (req, res) => {
     const last = conversation.lastMessage;
 
     if (!last) {
-      return res.status(200).json({ message: "Không có tin nhắn để mark as seen" });
+      return res
+        .status(200)
+        .json({ message: "Không có tin nhắn để mark as seen" });
     }
 
     if (last.senderId.toString() === userId) {

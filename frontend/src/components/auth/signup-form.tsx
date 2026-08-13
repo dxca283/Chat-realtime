@@ -37,7 +37,7 @@ export function SignupForm({
     const { displayName, username, email, password } = data;
     try {
       await signUp(username, displayName, email, password);
-      navigate("/sign-in");
+      navigate("/signin");
     } catch (error) {
       console.error(error);
     }
@@ -65,7 +65,7 @@ export function SignupForm({
                   {...register("displayName")}
                 />
                 {errors.displayName && (
-                  <p className="text-destructive text-sm">
+                  <p className="error-message">
                     {errors.displayName.message}
                   </p>
                 )}
@@ -80,7 +80,7 @@ export function SignupForm({
                   {...register("username")}
                 />
                 {errors.username && (
-                  <p className="text-destructive text-sm">{errors.username.message}</p>
+                  <p className="error-message">{errors.username.message}</p>
                 )}
               </Field>
               <Field>
@@ -93,7 +93,7 @@ export function SignupForm({
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="text-destructive text-sm">{errors.email.message}</p>
+                  <p className="error-message">{errors.email.message}</p>
                 )}
                 <FieldDescription>
                   We&apos;ll use this to contact you. We will not share your
@@ -112,7 +112,7 @@ export function SignupForm({
                       {...register("password")}
                     />
                     {errors.password && (
-                      <p className="text-destructive text-sm">
+                      <p className="error-message">
                         {errors.password.message}
                       </p>
                     )}
@@ -128,7 +128,7 @@ export function SignupForm({
                       {...register("password")}
                     />
                     {errors.password && (
-                      <p className="text-destructive text-sm">
+                      <p className="error-message">
                         {errors.password.message}
                       </p>
                     )}
@@ -176,7 +176,7 @@ export function SignupForm({
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Already have an account? <Link to="/sign-in">Sign in</Link>
+                Already have an account? <Link to="/signin">Sign in</Link>
               </FieldDescription>
             </FieldGroup>
           </form>
