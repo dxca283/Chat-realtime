@@ -213,11 +213,14 @@ export const useChatStore = create<ChatState>()(
       },
       createConversation: async (type, name, memberIds) => {
         try {
+          set({loading: true})
           const c = await chatService.createConversation(type, name, memberIds);
           get().addConvo(c);
           useSocketStore.getState().socket?.emit("join-conversation", c._id)
         } catch (error) {
           console.error("Lỗi xảy khi createConversation trong store", error);
+        } finally {
+          set({loading: false})
         }
       },
     }),
