@@ -63,6 +63,11 @@ export const createConversation = async (req, res) => {
       joinedAt: p.joinedAt,
     }));
     const formmated = { ...conversation.toObject(), participants };
+    if (type === "group") {
+      memberIds.forEach((memberId) => {
+        io.to(memberId).emit("new-group", formmated);
+      });
+    }
     return res.status(201).json({ conversation: formmated });
   } catch (error) {
     console.error("Loi khi tao conversation");
