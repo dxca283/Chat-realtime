@@ -70,7 +70,7 @@ export function SigninForm({
                   {...register("username")}
                 />
                 {errors.username && (
-                  <p className="text-destructive text-sm">{errors.username.message}</p>
+                  <p className="error-message">{errors.username.message}</p>
                 )}
               </Field>
 
@@ -84,7 +84,7 @@ export function SigninForm({
                   {...register("password")}
                 />
                 {errors.password && (
-                  <p className="text-destructive text-sm">{errors.password.message}</p>
+                  <p className="error-message">{errors.password.message}</p>
                 )}
               </Field>
               <Field>
@@ -125,7 +125,7 @@ export function SigninForm({
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Haven't signed up yet? <Link to="/sign-up">Sign up</Link>
+                Haven't signed up yet? <Link to="/signup">Sign up</Link>
               </FieldDescription>
             </FieldGroup>
 
